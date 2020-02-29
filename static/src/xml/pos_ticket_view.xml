@@ -23,8 +23,8 @@
                         RÉGIMEN COMÚN <br/>
                         NIT <t t-if="widget.pos.company.vat"><span t-esc="widget.pos.company.vat"/> <br/>
                         <t t-if="widget.pos.company.street"><span t-esc="widget.pos.company.street"/><br/>
-                        TEL 2<t t-if="widget.pos.company.phone"><span t-esc="widget.pos.company.phone"/><br/><br/>
-                        RESOLUCIÓN DIAN 18763001265775 <br/>
+                        TEL <t t-if="widget.pos.company.phone"><span t-esc="widget.pos.company.phone"/><br/><br/>
+                        RESOLUCIÓN DIAN 99999999999999 <br/>
                         DEL 2020-01-24 DEL 8001 AL 9000
                                              
                     </div>
@@ -66,99 +66,140 @@
                     </div>
                     <br/>
                 </t>
-                <table class='receipt-orderlines'>
+                 <table class='receipt-orderlines'>
                     <colgroup>
-                        <col width='35%' />
-                        <col width='20%' />
+                        <col width='33%' />
                         <col width='15%' />
-                        <col width='30%' />
+                        <col width='23%' />
+                        <col width='35%' />
                     </colgroup>
                     <tr style="border: 1px solid rgb(0, 0, 0);">
                         <th>PRODUCTO</th>
-                        <th>CANT.</th>
-                        <th>VAL. UNIT</th>
-                        <th style='text-align:right'>SUBT.</th>
+                        <th>CTA.</th>
+                        <th>VL.UNIT</th>
+                        <th style='text-align:right'>SUBTOTAL</th>
                     </tr>
-                    <tr t-foreach="orderlines" t-as="orderline" style="border-bottom: 1px solid #ddd;">
-                        <td >
-                            <t t-esc="orderline.get_product().display_name"/>
-                             <t t-if="orderline.get_discount() > 0">
-                                <div class="pos-disc-font">
-                                    <t t-esc="orderline.get_discount()"/>% DTO.
-                                </div>
-                            </t>
-                        </td>
-                        <td style='text-align:center'>
-                            <t t-esc="orderline.get_quantity_str_with_unit()"/>
-                        </td>
-                        <td>
-                            <t t-set="a" t-value="orderline.get_quantity_str_with_unit"></t>
-                            <t t-set="b" t-value="orderline.get_display_price()"></t>
-                            <t t-set="c" t-value="b / a"></t>
-                            <t t-esc="c"/>
-                        </td>
-                        <td style='text-align:right'>
-                            <t t-esc="widget.format_currency(orderline.get_display_price())"/>
-                        </td>
+                </table>
+                <!--Contador d Productos-->
+                <t t-set="counter" t-value="0"/>
+                        
+                    <table style="font-size:14px">
+                    <tr t-foreach="orderlines" t-as="orderline">
+                         <t  t-set="counter" t-value="counter + 1"/>
+                        <td>                          
+                            <div class="row" style="margin-bottom:5px">
 
+                            <t t-if="orderline.get_product().default_code">
+                            [<t t-esc="orderline.get_product().default_code"/>]
+                            </t>
+                            <t t-esc="orderline.get_product().display_name"/><br/>
+
+                             <!--t t-if="orderline.get_discount() > 0">
+                                <div class="pos-disc-font">
+                                    <t t-esc="orderline.get_discount()"/>% Dto.
+                                </div>
+                            </t-->
+                        
+                        <div class="col-12">
+                            <span style="margin-left:100px">
+                            <t t-esc="orderline.get_quantity_str_with_unit()"/>
+                        </span>
+                        
+                        <span style="margin-left:20px">
+                            <t t-set="a" t-value="orderline.get_unit_display_price()"></t>
+                            <t t-set="b" t-value="1.19"></t>
+                            <t t-set="c" t-value="a/b"></t>
+                            <t t-esc="widget.format_currency(c,'Product Price')"/>
+                        </span>
+                        
+                        <span style="margin-left:7px" class="pull-right">
+                            <t t-esc="widget.format_currency(orderline.get_display_price()/1.19,'Product Price')"/>
+                        </span>
+                      </div> 
+                      </div>
+                </td>
                     </tr>
                 </table>
                 <br />
+                 
+                <div style="border-top: 1px solid black;" >
+                    <span>TOTAL PRODUCTOS:</span> <span style="margin-left:20px" t-esc="counter"/> 
+                </div>  <br/>     
+                      
+                        
+<div style="border-top: 1px solid black;"></div>
                 <table class='receipt-total'>
                     <colgroup>
+                        <col width='25%' />
+                        <col width='35%' />
                         <col width='40%' />
-                        <col width='30%' />
-                        <col width='30%' />
                     </colgroup>
                     <tr>
                         <td></td>
-                        <td>SUBTOTAL:</td>
+                        <td>Subt. sin Dto.:</td>
                         <td style='text-align:right'>
-                            <t t-esc="widget.format_currency(order.get_total_without_tax())"/>
+                            <t t-set="g" t-value="order.get_total_without_tax()"/>
+                            <t t-set="h" t-value="order.get_total_discount()/1.19"></t>
+                            <t t-set="i" t-value="g+h"></t>
+                            <t t-esc="widget.format_currency(i,'Product Price')"/>
                         </td>
                     </tr>
+                    <tr>
+                        <td></td>
+                        <td>Discount:</td>
+                        <td style='text-align:right'>
+                            <t t-set="j" t-value="order.get_total_discount()"/>
+                            <!--El valor k es el Iva-->
+                            <t t-set="k" t-value="1.19"></t>
+                            <t t-set="l" t-value="j/k"></t>
+                            <t t-esc="widget.format_currency(l,'Product Price')"/>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td>Subtotal:</td>
+                        <td style='text-align:right'>
+                            <t t-esc="widget.format_currency(order.get_total_without_tax(),'Product Price')"/>
+                        </td>
+                    </tr>
+
                     <t t-foreach="order.get_tax_details()" t-as="taxdetail">
                         <tr>
                             <td></td>
                             <td><t t-esc="taxdetail.name" /></td>
                             <td style='text-align:right'>
-                                <t t-esc="widget.format_currency(taxdetail.amount)"/>
+                                <t t-esc="widget.format_currency(taxdetail.amount,'Product Price')"/>
                             </td>
                         </tr>
                     </t>
-                    <tr>
-                        <td></td>
-                        <td>DESCUENTO:</td>
-                        <td style='text-align:right'>
-                            <t t-esc="widget.format_currency(order.get_total_discount())"/>
-                        </td>
-                    </tr>
+                    
                     <tr class="emph">
-                        <td>TOTAL:</td>
+                        <td>Total:</td>
                         <td colspan="2" style='text-align:right'>
-                            <t t-esc="widget.format_currency(order.get_total_with_tax())"/>
+                            <t t-esc="widget.format_currency(order.get_total_with_tax(),'Product Price')"/>
                         </td>
                     </tr>
                 </table>
                 <br/>
                 <table class='receipt-paymentlines'>
                     <colgroup>
-                        <col width='38%' />
-                        <col width='20%' />
+                        <col width='48%' />
+                        
                         <col width='13%' />
-                        <col width='29%' />
+                        <col width='39%' />
                     </colgroup>
                     <t t-foreach="paymentlines" t-as="line">
                       <tr>
                           <td>
                               <t t-esc="line.name"/>
                           </td>
-                          <td>
-                          </td>
+                         
                           <td>
                           </td>
                           <td style='text-align:right'>
-                              <t t-esc="widget.format_currency(line.get_amount())"/>
+                              <t t-esc="widget.format_currency(line.get_amount(),'Product Price')"/>
                           </td>
                       </tr>
                     </t>
@@ -167,24 +208,24 @@
                 <table class='receipt-change'>
                     <colgroup>
                         <col width='40%' />
+                       
                         <col width='15%' />
-                        <col width='15%' />
-                        <col width='30%' />
+                        <col width='45%' />
                     </colgroup>
-                    <tr><td>CAMBIO:</td>
+                    <tr><td>Change:</td>
                          <td>
-                          </td>
-                          <td>
+                          
                           </td>
                         <td style='text-align:right'>
-                        <t t-esc="widget.format_currency(order.get_change())"/>
+                        <t t-esc="widget.format_currency(order.get_change(),'Product Price')"/>
                         </td></tr>
                 </table><br/>
-                    <div align="center" style="font-size:14px">
-                                          ¡GRACIAS POR SU COMPRA!<br />
-                        
-                     
+                    <div align="center" style="font-size:14px; border-top: 1px solid black">
+                    ¡GRACIAS POR SU COMPRA!<br />                      
                     </div>
+                    <t t-if="widget.pos.company.email">
+                    <div<t t-esc="widget.pos.company.email"/></div>
+                    </t>
             </div>
         </t>
     </t>
