@@ -16,15 +16,19 @@
                         <img src='/web/binary/company_logo' />
                     </div><br/>
 
-                   <div align="center" style="border-bottom: 1px solid black;margin-bottom: 5px">
+                   <div align="center">
                         <b><span style="font-size:17px"><t t-esc="widget.pos.company.name"/></span></b><br />
                         NIT. <t t-esc="widget.pos.company.vat"/> <br/>
-                        DIRECCIÓN. CALLE 38B 26E - 10<br/>
+                        DIRECCIÓN. CALLE XX XX - XX<br/>
                         TEL. <t t-esc="widget.pos.company.phone"/><br/>   
                         <t t-esc="widget.pos.company.email"/><br/>  <br/>  
-
-                        RESOLUCIÓN DIAN 189999999999<br/> 
-                        DEL 2020-10-10 DEL POS1 AL POS1000 <br/>
+                    </div>
+                    <div style="border-bottom: 1px solid black;">
+                        RESOLUCIÓN DIAN <span t-esc="order.get_sequence_data()[0]"/>                         
+                        Desde <span t-esc="order.get_sequence_data()[1]"/> hasta <span t-esc="order.get_sequence_data()[2]"/>
+                        Del <span t-esc="order.get_sequence_data()[3]"/><span t-esc="order.get_sequence_data()[4]"/> al
+                            <span t-esc="order.get_sequence_data()[3]"/> <span t-esc="order.get_sequence_data()[5]"/>
+                        <br/>
                     </div>
 
                     <div align="center">
