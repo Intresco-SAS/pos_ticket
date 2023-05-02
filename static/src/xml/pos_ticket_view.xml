@@ -2,7 +2,7 @@
 <templates id="point_of_sale.template" xml:space="preserve">
     <t t-extend="Chrome">
         <t t-jquery='.pos-branding' t-operation='replace'>
-             <img src='/web/binary/company_logo' style="width: 10%;padding: 2px 8px 0px 13px;float: left;"/>
+             <img src='/web/binary/company_logo' style="max-width: 40px;padding: 2px 8px 0px 13px;float: left;"/>
              <span class="placeholder-UsernameWidget" style="float: left;padding-top: 10px;color: #fff;"></span>
         </t>
     </t>
@@ -11,7 +11,7 @@
         <t t-jquery='.pos-sale-ticket' t-operation='replace'>
             <div class="pos-sale-ticket">
                 
-                    <div class="row">
+                <div class="row">
                    <div class="col-12" style="width: 100%;" align="center">
                         <img src='/web/binary/company_logo' />
                     </div><br/>
@@ -19,17 +19,23 @@
                    <div align="center">
                         <b><span style="font-size:17px"><t t-esc="widget.pos.company.name"/></span></b><br />
                         NIT. <t t-esc="widget.pos.company.vat"/> <br/>
-                        DIRECCIÓN. CALLE XX XX - XX<br/>
+                        <!--Espacio reservado para la dirección y otros datos personalizados-->
+                        <t t-if="receipt.header">
+                            <span t-esc="receipt.header" />
+                        </t><br/>
                         TEL. <t t-esc="widget.pos.company.phone"/><br/>   
                         <t t-esc="widget.pos.company.email"/><br/>  <br/>  
                     </div>
-                    <div style="border-bottom: 1px solid black;">
-                        RESOLUCIÓN DIAN <span t-esc="order.get_sequence_data()[0]"/>                         
-                        Desde <span t-esc="order.get_sequence_data()[1]"/> hasta <span t-esc="order.get_sequence_data()[2]"/>
-                        Del <span t-esc="order.get_sequence_data()[3]"/><span t-esc="order.get_sequence_data()[4]"/> al
-                            <span t-esc="order.get_sequence_data()[3]"/> <span t-esc="order.get_sequence_data()[5]"/>
-                        <br/>
-                    </div>
+                    <t t-if="order.get_sequence_data()[0] != '999999999'">
+                        <div align="center" style="border-bottom: 1px solid black;">
+                            RESOLUCIÓN DIAN <span t-esc="order.get_sequence_data()[0]"/>                         
+                            Desde <span t-esc="order.get_sequence_data()[1]"/> hasta <span t-esc="order.get_sequence_data()[2]"/>
+                            Del <span t-esc="order.get_sequence_data()[3]"/><span t-esc="order.get_sequence_data()[4]"/> al
+                                <span t-esc="order.get_sequence_data()[3]"/> <span t-esc="order.get_sequence_data()[5]"/>
+                            <br/>
+                        </div>
+                    </t>
+                    <t t-else=""/>
 
                     <div align="center">
 
@@ -75,13 +81,7 @@
                     <div style="width:100%;text-align:right;"><t t-esc="widget.pos.company.email"/></div>
                 </t-->
                 <br />
-                <t t-if="receipt.header">
-                    <div style='text-align:center'>
-                        <t t-esc="receipt.header" />
-                    </div>
-                    <br/>
-                </t>
-                               <table class='receipt-orderlines'>
+                <table class='receipt-orderlines'>
                     <colgroup>
                         <col width='28%' />
                         <col width='14%' />
@@ -96,45 +96,40 @@
                     </tr>
                 </table>
 
-                    <table >
+                <table >
                     <tr t-foreach="orderlines" t-as="orderline">
-                        <td>
-
-                            
-<div class="row" style="margin-bottom:5px">
-                            <t t-if="orderline.get_product().default_code">
-                                [<t t-esc="orderline.get_product().default_code"/>]
-                            </t>
-                            <t t-esc="orderline.get_product().display_name"/><br/>
-
-                             <!--t t-if="orderline.get_discount() > 0">
-                                <div class="pos-disc-font">
-                                    <t t-esc="orderline.get_discount()"/>% Dto.
-                                </div>
-                            </t-->
-                        
-                        <div class="col-12">
-                            <span style="margin-left:85px">
-                            <t t-esc="orderline.get_quantity_str_with_unit()"/>
-                        </span>
-                        
-                        <span style="margin-left:30px">
-                            <t t-set="a" t-value="orderline.get_unit_display_price()"></t>
-                            <t t-set="b" t-value="1"></t>
-                            <t t-set="c" t-value="a/b"></t>
-                            <t t-esc="widget.format_currency(c,'Product Price')"/>
-                        </span>
-                        
-                        <span style="margin-left:7px" class="pull-right">
-                            <t t-esc="widget.format_currency(orderline.get_display_price()/1,'Product Price')"/>
-                        </span>
-                      </div> 
-                      </div>
-                </td>
+                        <td>    
+                            <div class="row" style="margin-bottom:5px">
+                                <t t-if="orderline.get_product().default_code">
+                                    [<t t-esc="orderline.get_product().default_code"/>]
+                                </t>
+                                <t t-esc="orderline.get_product().display_name"/><br/>
+                                    <!--t t-if="orderline.get_discount() > 0">
+                                    <div class="pos-disc-font">
+                                        <t t-esc="orderline.get_discount()"/>% Dto.
+                                    </div>
+                                    </t-->
+                                <div class="col-12">
+                                    <span style="margin-left:85px">
+                                        <t t-esc="orderline.get_quantity_str_with_unit()"/>
+                                    </span>                        
+                                    <span style="margin-left:30px">
+                                        <t t-set="a" t-value="orderline.get_unit_display_price()"></t>
+                                        <t t-set="b" t-value="1"></t>
+                                        <t t-set="c" t-value="a/b"></t>
+                                        <t t-esc="widget.format_currency(c,'Product Price')"/>
+                                    </span>
+                                
+                                    <span style="margin-left:7px" class="pull-right">
+                                        <t t-esc="widget.format_currency(orderline.get_display_price()/1,'Product Price')"/>
+                                    </span>
+                                </div> 
+                            </div>
+                        </td>
                     </tr>
                 </table>
-                <br />
-<div style="border-top: 1px solid black;"></div>
+                <br/>
+                <div style="border-top: 1px solid black;"/>
                 <table class='receipt-total'>
                     <colgroup>
                         <col width='30%' />
@@ -227,70 +222,43 @@
                         <td style='text-align:right'>
                         <t t-esc="widget.format_currency(order.get_change())"/>
                         </td></tr>
-                </table><br/>
+                </table>
+                <br/>
+                <t t-if='receipt.footer'>
                     <div align="center" style="font-size:16px">
-                                          ¡GRACIAS POR SU COMPRA!<br />
-                        
-                     
+                        <span t-esc='receipt.footer' />
                     </div>
+                </t>
             </div>
         </t>
     </t>
 
-                <t t-extend="NumberPopupWidget">
-            <t t-jquery='.modal-dialog' t-operation='replace'>  
-        <div role="dialog" class="modal-dialog">
-            <div class="popup popup-number">
-                <header class="title"><t t-esc=" widget.options.title || '' " /></header>
-                <div class='popup-input value active'>
-                    <t t-esc='widget.inputbuffer' />
-                </div>
-                <div class='popup-numpad'>
-                    <button class="input-button number-char" data-action='1'>1</button>
-                    <button class="input-button number-char" data-action='2'>2</button>
-                    <button class="input-button number-char" data-action='3'>3</button>
-                    <t t-if="widget.options.cheap">
-                        <button class="mode-button add" data-action='+1'>+1</button>
-                    </t><t t-if="!widget.options.cheap">
-                        <button class="mode-button add" data-action='+10000'>+10</button>
-                    </t>
-                    <br />
-                    <button class="input-button number-char" data-action='4'>4</button>
-                    <button class="input-button number-char" data-action='5'>5</button>
-                    <button class="input-button number-char" data-action='6'>6</button>
-                    <t t-if="widget.options.cheap">
-                        <button class="mode-button add" data-action='+2'>+2</button>
-                    </t><t t-if="!widget.options.cheap">
-                        <button class="mode-button add" data-action='+20000'>+20</button>
-                    </t>
-                    <br />
-                    <button class="input-button number-char" data-action='7'>7</button>
-                    <button class="input-button number-char" data-action='8'>8</button>
-                    <button class="input-button number-char" data-action='9'>9</button>
-                    <t t-if="widget.options.cheap">
-                        <button class="mode-button add" data-action='+5'>+5</button>
-                    </t><t t-if="!widget.options.cheap">
-                        <button class="mode-button add" data-action='+50000'>+50</button>
-                    </t>
-                    <br />
-                    <button class="input-button numpad-char" data-action='CLEAR' >C</button>
-                    <button class="input-button number-char" data-action='0'>0</button>
-                    <button class="input-button number-char dot" t-att-data-action='widget.decimal_separator'><t t-esc='widget.decimal_separator'/></button>
-                    <button class="input-button numpad-backspace" data-action='BACKSPACE' >
-                        <img style="pointer-events: none;" src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" alt="Backspace"/>
-                    </button>
-                    <br />
-                </div>
-                <footer class="footer centered">
-                    <div class="button cancel">
-                        Cancel
-                    </div>
-                    <div class="button confirm">
-                        Ok
-                    </div>
-                </footer>
-            </div>
+    <!--Facilidad de Billetes en el Tablero-->
+    <t t-extend="PaymentScreen-Numpad">
+        <t t-jquery='div.numpad' t-operation='replace'>  
+         <div class="numpad">
+            <button class="input-button number-char" data-action='1'>1</button>
+            <button class="input-button number-char" data-action='2'>2</button>
+            <button class="input-button number-char" data-action='3'>3</button>
+            <button class="mode-button" data-action='+10000'>+10</button>
+            <br />
+            <button class="input-button number-char" data-action='4'>4</button>
+            <button class="input-button number-char" data-action='5'>5</button>
+            <button class="input-button number-char" data-action='6'>6</button>
+            <button class="mode-button" data-action='+20000'>+20</button>
+            <br />
+            <button class="input-button number-char" data-action='7'>7</button>
+            <button class="input-button number-char" data-action='8'>8</button>
+            <button class="input-button number-char" data-action='9'>9</button>
+            <button class="mode-button" data-action='+50000'>+50</button>
+            <br />
+            <button class="input-button numpad-char" data-action='CLEAR' >C</button>
+            <button class="input-button number-char" data-action='0'>0</button>
+            <button class="input-button number-char" t-att-data-action='widget.decimal_point'><t t-esc='widget.decimal_point'/></button>
+            <button class="input-button numpad-backspace" data-action='BACKSPACE' >
+                <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" alt="Backspace"/>
+            </button>
         </div>
+        </t>
     </t>
-</t>
 </templates>
