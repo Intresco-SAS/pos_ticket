@@ -159,22 +159,24 @@
                         </td>
                     </tr-->
 
-                    <tr>
-                        <td></td>
-                        <td>Subtotal:</td>
-                        <td style='text-align:right'>
-                            <t t-esc="widget.format_currency(order.get_total_without_tax())"/>
-                        </td>
-                    </tr>
-
-                    <t t-foreach="order.get_tax_details()" t-as="taxdetail">
+                    <t t-if="order.get_sequence_data()[0] == '999999999'">
                         <tr>
                             <td></td>
-                            <td><t t-esc="taxdetail.name" /></td>
+                            <td>Subtotal:</td>
                             <td style='text-align:right'>
-                                <t t-esc="widget.format_currency(taxdetail.amount)"/>
+                                <t t-esc="widget.format_currency(order.get_total_without_tax())"/>
                             </td>
                         </tr>
+
+                        <t t-foreach="order.get_tax_details()" t-as="taxdetail">
+                            <tr>
+                                <td></td>
+                                <td><t t-esc="taxdetail.name" /></td>
+                                <td style='text-align:right'>
+                                    <t t-esc="widget.format_currency(taxdetail.amount)"/>
+                                </td>
+                            </tr>
+                        </t>
                     </t>
                     
                     <tr class="emph">
