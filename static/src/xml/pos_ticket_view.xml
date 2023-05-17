@@ -12,7 +12,7 @@
             <div class="pos-sale-ticket">
                 
                 <div class="row">
-                   <t t-if="widget.pos.company.name != 'Ferreteria Electricos Loren S.A.S' and order.get_sequence_data()[0] != '999999999-1'">
+                   <t t-if="widget.pos.company.name != 'Ferreteria Electricos Loren S.A.S' and order.get_sequence_data()[0] != '999999999'">
                         <div class="col-12" style="width: 100%;" align="center">
                             <img src='/web/binary/company_logo' />
                         </div>
@@ -36,7 +36,7 @@
                         </t>
                     </div>
 
-                    <t t-if="order.get_sequence_data()[0] != '999999999' or order.get_sequence_data()[0] != '999999999-1'">
+                    <t t-if="order.get_sequence_data()[0] != '999999999'">
                         <div align="center" style="border-bottom: 1px solid black;">
                             RESOLUCIÓN DIAN <span t-esc="order.get_sequence_data()[0]"/>                         
                             Desde <span t-esc="order.get_sequence_data()[1]"/> hasta <span t-esc="order.get_sequence_data()[2]"/>
@@ -167,7 +167,7 @@
                         </td>
                     </tr-->
 
-                    <t t-if="order.get_sequence_data()[0] != '999999999' or order.get_sequence_data()[0] != '999999999-1'">
+                    <t t-if="order.get_sequence_data()[0] != '999999999'">
                         <tr>
                             <td></td>
                             <td>Subtotal:</td>
