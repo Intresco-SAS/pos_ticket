@@ -12,21 +12,31 @@
             <div class="pos-sale-ticket">
                 
                 <div class="row">
-                   <div class="col-12" style="width: 100%;" align="center">
-                        <img src='/web/binary/company_logo' />
-                    </div><br/>
+                   <t t-if="order.get_sequence_data()[0] != '999999999-1' or widget.pos.company.name != 'Ferreteria Electricos Loren S.A.S'">
+                        <div class="col-12" style="width: 100%;" align="center">
+                            <img src='/web/binary/company_logo' />
+                        </div>
+                        <br/>
+                    </t>
 
                    <div align="center">
                         <b><span style="font-size:17px"><t t-esc="widget.pos.company.name"/></span></b><br />
-                        NIT. <t t-esc="widget.pos.company.vat"/> <br/>
+                        <t t-if="widget.pos.company.vat">
+                            <span>NIT. </span><t t-esc="widget.pos.company.vat"/> <br/>
+                        </t>
                         <!--Espacio reservado para la dirección y otros datos personalizados-->
                         <t t-if="receipt.header">
-                            <span t-esc="receipt.header" />
-                        </t><br/>
-                        TEL. <t t-esc="widget.pos.company.phone"/><br/>   
-                        <t t-esc="widget.pos.company.email"/><br/>  <br/>  
+                            <span t-esc="receipt.header" /><br/>
+                        </t>                        
+                        <t t-if="widget.pos.company.phone">
+                            <span>TEL. </span><t t-esc="widget.pos.company.phone"/><br/> 
+                        </t>
+                        <t t-if="widget.pos.company.email">
+                            <t t-esc="widget.pos.company.email"/><br/><br/>  
+                        </t>
                     </div>
-                    <t t-if="order.get_sequence_data()[0] != '999999999'">
+
+                    <t t-if="order.get_sequence_data()[0] != '999999999' or order.get_sequence_data()[0] != '999999999-1'">
                         <div align="center" style="border-bottom: 1px solid black;">
                             RESOLUCIÓN DIAN <span t-esc="order.get_sequence_data()[0]"/>                         
                             Desde <span t-esc="order.get_sequence_data()[1]"/> hasta <span t-esc="order.get_sequence_data()[2]"/>
@@ -60,19 +70,17 @@
                     </div-->
                 </div>
 
-                <div align="center">
-               
-                  
-                        ATENDIÓ: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/><br/><br/>
-                        <b>
-                        <t t-if="order.returned_order_id">NOTA DE CRÉDITO: </t>
-                        <t t-if="!order.returned_order_id">FACTURA DE VENTA: </t>
-                        <t t-esc="order.name"/>
-                        <t t-if="order.returned_order_id">
-                            <br/>DOC. ORIGEN: <t t-esc="order.returned_order_reference"/>
-                        </t>
-                        </b><br/>
-                        FECHA: <t t-esc="moment().format('L LT')"/><br/>
+                <div align="center">  
+                    ATENDIÓ: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/><br/><br/>
+                    <b>
+                    <t t-if="order.returned_order_id">NOTA DE CRÉDITO: </t>
+                    <t t-if="!order.returned_order_id">FACTURA DE VENTA: </t>
+                    <t t-esc="order.name"/>
+                    <t t-if="order.returned_order_id">
+                        <br/>DOC. ORIGEN: <t t-esc="order.returned_order_reference"/>
+                    </t>
+                    </b><br/>
+                    FECHA: <t t-esc="moment().format('L LT')"/><br/>
                  </div>
                 <!--t t-if="widget.pos.company.name">
                     <div style="width:100%;text-align:right;"><t t-esc="widget.pos.company.name"/></div>
@@ -159,7 +167,7 @@
                         </td>
                     </tr-->
 
-                    <t t-if="order.get_sequence_data()[0] != '999999999'">
+                    <t t-if="order.get_sequence_data()[0] != '999999999' or order.get_sequence_data()[0] != '999999999-1'">
                         <tr>
                             <td></td>
                             <td>Subtotal:</td>
