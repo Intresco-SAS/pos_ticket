@@ -159,7 +159,7 @@
                         </td>
                     </tr-->
 
-                    <t t-if="order.get_sequence_data()[0] == '999999999'">
+                    <t t-if="order.get_sequence_data()[0] != '999999999'">
                         <tr>
                             <td></td>
                             <td>Subtotal:</td>
