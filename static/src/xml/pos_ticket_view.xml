@@ -12,7 +12,7 @@
             <div class="pos-sale-ticket">
                 
                 <div class="row">
-                   <t t-if="order.get_sequence_data()[0] != '999999999-1' or widget.pos.company.name != 'Ferreteria Electricos Loren S.A.S'">
+                   <t t-if="widget.pos.company.name != 'Ferreteria Electricos Loren S.A.S' and order.get_sequence_data()[0] != '999999999-1'">
                         <div class="col-12" style="width: 100%;" align="center">
                             <img src='/web/binary/company_logo' />
                         </div>
