@@ -167,7 +167,7 @@
                         </td>
                     </tr-->
 
-                    <t t-if="order.get_sequence_data()[0] != '999999999'">
+                    <t t-if="widget.pos.company.name != 'COMERCIALIZADORA CDJ'">
                         <tr>
                             <td></td>
                             <td>Subtotal:</td>
